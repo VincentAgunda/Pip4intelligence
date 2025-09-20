@@ -1,24 +1,66 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+// app/_layout.tsx
+import { Tabs } from "expo-router";
+import { PaperProvider } from "react-native-paper";
+import { MaterialIcons } from "@expo/vector-icons";
+import { AppProvider, useAppContext } from "../context/AppContext";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
+function AppTabs() {
+  const { theme } = useAppContext();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <PaperProvider theme={theme}>
+      <Tabs
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: theme.colors.primary,
+          tabBarStyle: {
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
+            backgroundColor: theme.colors.background,
+            height: 60,
+          },
+          tabBarLabelStyle: { fontSize: 12, marginBottom: 6 },
+        }}
+      >
+        {/* 🚀 PIP4 Intelligence Branding */}
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: "PIP4 Intelligence",
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="lightbulb" color={color} size={size} />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="history"
+          options={{
+            title: "History",
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="history" color={color} size={size} />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="settings"
+          options={{
+            title: "Settings",
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="settings" color={color} size={size} />
+            ),
+          }}
+        />
+      </Tabs>
+    </PaperProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <AppProvider>
+      <AppTabs />
+    </AppProvider>
   );
 }
